@@ -68,27 +68,6 @@ output = w8a16_gemm.w8a16_gemm(
 print(f"输出形状: {output.shape}")  # (1, 4096)
 ```
 
-## 量化流程
-
-```python
-import torch
-import torch.nn as nn
-from quantize import quantize_model
-
-# 加载 FP16 模型
-model = SimpleFNN(input_dim=1024, hidden_dims=[16384]*6, output_dim=1).half()
-model.load_state_dict(torch.load("model/model_weights.pth"))
-
-# 量化为 W8A16
-model = quantize_model(model)
-torch.save(model.state_dict(), "model/quantized_model_w8a16.pth")
-```
-
-量化公式：
-- **分组量化**：每 128 个权重为一组
-- **缩放因子**：`scale = max(|group|) / 127.0`
-- **量化值**：`round(weight / scale) + 128`，clamp 到 `[0, 255]`
-
 ## 参数说明
 
 | 参数 | 类型 | 形状 | 描述 |
